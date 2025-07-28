@@ -16,7 +16,7 @@ Please contact at:
 ---
 
 # Projects In this Repository:
-# 1. Random Password Generator:
+# 1. Random Password Generator (Random_Password.py):
 A password generator that generates High strength passwords randomly with
   * 8 or more characters
   * A special character (*&@!$#)
