@@ -23,7 +23,7 @@ A password generator that generates High strength passwords randomly with
   * Numbers (0-9)
 ---
 
-# 2. A Dice Simulator:
+# 2. A Dice Simulator(Dice_Simulator.py):
 A Simple Python program that perfectly simulates the outcomes of a rolling Dice.
   This includes 1-6 outcomes that are random
   Complete operation without any Python Module
