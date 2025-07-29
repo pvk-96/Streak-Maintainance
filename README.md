@@ -29,3 +29,10 @@ A Simple Python program that perfectly simulates the outcomes of a rolling Dice.
   Complete operation without any Python Module
 
 ---
+
+# 3. An Internet Connection Checker (Internet_checker.py):
+A Simple python program that sends requests to a url like google.com to verify the internet connection.
+ If the requests are answered or recieved, the internet connection is active.
+ Else the internet connection is not working.
+
+---
