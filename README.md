@@ -36,3 +36,9 @@ A Simple python program that sends requests to a url like google.com to verify t
  Else the internet connection is not working.
 
 ---
+
+# 4.Tic Tac Toe Game(tictactoe.py):
+A simple Command Line Interface game of Tic Tac Toe.
+Takes 1-9 numbers as input from user and fills the character according to the input.
+
+---
