@@ -4,3 +4,5 @@ I will be updating this folder with simple but useful Bash Scripts that I Will l
 
 ---
 
+1. A simple To-Do list in Bash.
+   Available in Bash/To-do
