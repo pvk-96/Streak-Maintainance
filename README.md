@@ -14,6 +14,11 @@ Please contact at:
 # .
 
 ---
+# Folders in this Repository:
+1. Bash:
+    This folder contains simple Bash script applications, that will be updated as I learn.
+
+---
 
 # Projects In this Repository:
 # 1. Random Password Generator (Random_Password.py):
