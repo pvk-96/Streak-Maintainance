@@ -55,6 +55,7 @@ please refer to Timer/README.md for more details.
 
 ---
 
-# 6. Snake.py
+# 6. Snake Game (Snake.py)
 
 A python powered snake game on command line complete with scoring system
+A 20 x 40 game that directly runs in your command prompt.
