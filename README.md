@@ -51,3 +51,8 @@ Takes 1-9 numbers as input from user and fills the character according to the in
 # 5. Timer(Timer/Timer.py):
 A simple Countdown Timer made from python. 
 please refer to Timer/README.md for more details.
+
+
+---
+
+#6. Snake.py
