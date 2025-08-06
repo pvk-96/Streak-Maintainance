@@ -1,5 +1,6 @@
 # --- Tic-Tac-Toe Game ---
 # --- By pvk-96 ---
+# --- Changes are encouraged ---
 board = [' ' for x in range(10)]
 
 def print_board(board):
