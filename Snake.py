@@ -1,3 +1,6 @@
+# --- Snake game ---
+# --- made by pvk-96 ---
+# --- Changes are encouraged ---
 import curses
 import random
 
