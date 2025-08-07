@@ -1,3 +1,5 @@
+# --- Internet Checker ---
+# --- made by pvk-96 ---
 import requests
 
 def internet_connection_test():
