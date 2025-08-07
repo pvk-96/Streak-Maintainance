@@ -1,3 +1,4 @@
+# --- A Dice simulator. ---
 # --- made by pvk-96 ---
 # --- Changes are encouraged ---
 import random
