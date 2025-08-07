@@ -1,3 +1,6 @@
+# --- Simple To Do list from the command line.---
+# ---Changes are encouraged. ---
+# --- Made by pvk-96 ---
 #!/bin/bash
 
 TODO_FILE="$HOME/todo.txt"
