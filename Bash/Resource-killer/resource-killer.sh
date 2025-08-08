@@ -1,3 +1,5 @@
+# A simple bash script to kill Resources taking up more than 30% of System's Resources.
+# made by pvk-96
 #!/bin/bash
 
 # Thresholds (in %)
