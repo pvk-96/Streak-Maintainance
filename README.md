@@ -11,7 +11,6 @@ Please contact at:
 ---
 # Also Explore my other projects.
 # Thank You
-# .
 
 ---
 # Folders in this Repository:
