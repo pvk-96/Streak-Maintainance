@@ -1,11 +1,5 @@
-#!/bin/bash
-
-# Colors
-RED="\e[31m"
-GREEN="\e[32m"
-YELLOW="\e[33m"
-NC="\e[0m"
-
+# Netfix.sh: A script used to Diagnose the cause of network issues.
+# Created by pvk-96
 echo -e "${YELLOW}=== NetFix: Linux Network Auto-Troubleshooter ===${NC}"
 
 # 1. Check network interface
