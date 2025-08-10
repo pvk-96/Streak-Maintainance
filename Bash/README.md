@@ -12,4 +12,3 @@ I will be updating this folder with simple but useful Bash Scripts that I Will l
 ---
 3. A simple bash script to diagnose the issues with network in linux systems
    Available in Bash/Netfix.
----
