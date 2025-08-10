@@ -17,6 +17,8 @@ Please contact at:
 1. Bash:
     This folder contains simple Bash script applications, that will be updated as I learn.
 
+2. Java: 
+    This folder contains java programs that I am learning 
 ---
 
 # Projects In this Repository:
