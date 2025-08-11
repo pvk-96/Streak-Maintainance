@@ -1,6 +1,5 @@
 import java.util.*;
 // java Program to create an array and see its minimum and maximum element
-// 23331A0596 K. Praneeth Varma 04-07-2025.
 public class Minmax{
 	public static void main(String args[]){
 		Scanner sc = new Scanner(System.in);
