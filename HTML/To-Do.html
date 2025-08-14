@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            color: #1f2937; /* Tailwind gray-800 */
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* Tailwind rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind shadow-lg */
+            width: 100%;
+            max-width: 600px;
+            margin-top: 2rem;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb; /* Tailwind gray-200 */
+        }
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        .task-item.completed span {
+            text-decoration: line-through;
+            color: #9ca3af; /* Tailwind gray-400 */
+        }
+        .task-actions button {
+            margin-left: 0.5rem;
+            padding: 0.375rem 0.75rem; /* Tailwind px-3 py-1.5 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            font-size: 0.875rem; /* Tailwind text-sm */
+            font-weight: 500; /* Tailwind font-medium */
+        }
+        .momentum-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border: 1px solid #7dd3fc; /* Tailwind sky-300 */
+            color: #0c4a6e; /* Tailwind sky-800 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            text-align: center;
+        }
+        .focus-mode {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #ffedd5; /* Tailwind orange-100 */
+            border: 1px solid #fdba74; /* Tailwind orange-300 */
+            color: #7c2d12; /* Tailwind orange-900 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            text-align: center;
+        }
+        .focus-mode h3 {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            font-weight: 600; /* Tailwind font-semibold */
+            margin-bottom: 0.75rem;
+        }
+        .focus-mode p {
+            font-size: 1.125rem; /* Tailwind text-lg */
+            margin-bottom: 0.5rem;
+        }
+        .focus-mode .timer {
+            font-size: 2.25rem; /* Tailwind text-4xl */
+            font-weight: 700; /* Tailwind font-bold */
+            margin-bottom: 1rem;
+            color: #c2410c; /* Tailwind orange-600 */
+        }
+        .message-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10b981; /* Tailwind green-500 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+        /* Hide other content when in focus mode */
+        body.focus-active .container > *:not(.focus-mode-wrapper),
+        body.focus-active .momentum-section {
+            display: none !important;
+        }
+        .focus-mode-wrapper { /* To ensure focus mode is still visible */
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-sky-600">To-Do List</h1>
+            <p class="text-gray-500 mt-1">Do It!!!</p>
+        </header>
+
+        <div class="mb-6">
+            <div class="flex gap-2">
+                <input type="text" id="taskInput" class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150" placeholder="Add a new task...">
+                <button id="addTaskBtn" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-150 shadow-md hover:shadow-lg">Add Task</button>
+            </div>
+        </div>
+
+        <div id="taskListContainer">
+            <h2 class="text-2xl font-semibold mb-3 text-gray-700">Your Tasks</h2>
+            <ul id="taskList" class="bg-white rounded-lg ">
+                </ul>
+            <p id="noTasksMessage" class="text-gray-500 text-center py-4 hidden">No tasks yet. Add some!</p>
+        </div>
+    </div>
+
+    <div class="momentum-section container">
+        <h2 class="text-xl font-semibold mb-2">Momentum Chain 🔥</h2>
+        <p>Current Streak: <span id="momentumStreak" class="font-bold text-2xl">0</span> days</p>
+        <p id="momentumMessage" class="text-sm mt-1">Complete a task today to keep the chain going!</p>
+    </div>
+
+    <div class="focus-mode-wrapper w-full max-w-md">
+        <div id="focusModeSection" class="focus-mode hidden">
+            <h3 id="focusTaskName">Focusing on: Task Name</h3>
+            <p class="timer" id="focusTimer">25:00</p>
+            <p id="focusInstructions" class="text-sm mb-4">Stay on this task until the timer ends or you complete it.</p>
+            <button id="completeFocusTaskBtn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg mr-2 transition duration-150">Mark as Complete</button>
+            <button id="exitFocusModeBtn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">Exit Focus</button>
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box">Message here</div>
+
+    <script>
+        // DOM Elements
+        const taskInput = document.getElementById('taskInput');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskList = document.getElementById('taskList');
+        const noTasksMessage = document.getElementById('noTasksMessage');
+
+        const momentumStreakEl = document.getElementById('momentumStreak');
+        const momentumMessageEl = document.getElementById('momentumMessage');
+
+        const focusModeSection = document.getElementById('focusModeSection');
+        const focusTaskNameEl = document.getElementById('focusTaskName');
+        const focusTimerEl = document.getElementById('focusTimer');
+        const completeFocusTaskBtn = document.getElementById('completeFocusTaskBtn');
+        const exitFocusModeBtn = document.getElementById('exitFocusModeBtn');
+        const messageBox = document.getElementById('messageBox');
+
+        // App State
+        let tasks = [];
+        let momentumStreak = 0;
+        let lastCompletionDate = null; // Store as YYYY-MM-DD string
+        let currentFocusTask = null; // Stores the task object being focused on
+        let focusTimerInterval = null;
+        let focusTimeRemaining = 25 * 60; // 25 minutes in seconds
+
+        // --- Initialization ---
+        function initializeApp() {
+            loadTasks();
+            loadMomentum();
+            renderTasks();
+            updateMomentumDisplay();
+            checkChainStatus(); // Check if chain was broken due to inactivity
+        }
+
+        // --- Task Management ---
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            if (taskText === "") {
+                showMessage("Task cannot be empty!", "error");
+                return;
+            }
+            const newTask = {
+                id: Date.now().toString(),
+                text: taskText,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+            tasks.push(newTask);
+            taskInput.value = "";
+            saveTasks();
+            renderTasks();
+            showMessage("Task added successfully!", "success");
+        }
+
+        function renderTasks() {
+            taskList.innerHTML = ""; // Clear existing tasks
+            if (tasks.length === 0) {
+                noTasksMessage.classList.remove('hidden');
+                taskList.classList.add('hidden');
+            } else {
+                noTasksMessage.classList.add('hidden');
+                taskList.classList.remove('hidden');
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                    li.dataset.id = task.id;
+
+                    const taskSpan = document.createElement('span');
+                    taskSpan.textContent = task.text;
+                    taskSpan.className = "flex-grow cursor-pointer";
+                    taskSpan.onclick = () => toggleComplete(task.id);
+
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'task-actions';
+
+                    if (!task.completed) {
+                        const focusBtn = document.createElement('button');
+                        focusBtn.textContent = "Focus";
+                        focusBtn.className = "bg-yellow-400 hover:bg-yellow-500 text-yellow-800";
+                        focusBtn.onclick = (e) => {
+                            e.stopPropagation(); // Prevent li click
+                            startFocusMode(task.id);
+                        };
+                        actionsDiv.appendChild(focusBtn);
+                    }
+
+                    const completeBtn = document.createElement('button');
+                    completeBtn.textContent = task.completed ? "Undo" : "Done";
+                    completeBtn.className = task.completed ? "bg-gray-400 hover:bg-gray-500 text-white" : "bg-green-500 hover:bg-green-600 text-white";
+                    completeBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        toggleComplete(task.id);
+                    };
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.className = "bg-red-500 hover:bg-red-600 text-white";
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteTask(task.id);
+                    };
+
+                    actionsDiv.appendChild(completeBtn);
+                    actionsDiv.appendChild(deleteBtn);
+
+                    li.appendChild(taskSpan);
+                    li.appendChild(actionsDiv);
+                    taskList.appendChild(li);
+                });
+            }
+        }
+
+        function toggleComplete(id) {
+            const taskIndex = tasks.findIndex(task => task.id === id);
+            if (taskIndex > -1) {
+                const taskCompletedNow = !tasks[taskIndex].completed;
+                tasks[taskIndex].completed = taskCompletedNow;
+
+                if (taskCompletedNow) {
+                    handleTaskCompletion();
+                }
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+            renderTasks();
+            showMessage("Task deleted.", "info");
+        }
+
+        // --- Momentum Chain ---
+        function handleTaskCompletion() {
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+            if (lastCompletionDate !== today) { // First completion of the day or new day
+                if (lastCompletionDate) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayStr = yesterday.toISOString().split('T')[0];
+                    if (lastCompletionDate === yesterdayStr) {
+                        momentumStreak++;
+                        showMessage("Momentum chain extended!", "success");
+                    } else { // Missed a day or more
+                        momentumStreak = 1;
+                        showMessage("New momentum chain started!", "success");
+                    }
+                } else { // First ever completion
+                    momentumStreak = 1;
+                    showMessage("Momentum chain started!", "success");
+                }
+                lastCompletionDate = today;
+            } else {
+                 // Already completed a task today, chain maintained but not incremented
+                showMessage("Great job on another task today!", "info");
+            }
+            saveMomentum();
+            updateMomentumDisplay();
+        }
+
+        function checkChainStatus() {
+            // This function is called on load to see if the chain should be broken
+            if (!lastCompletionDate) return; // No completions yet
+
+            const today = new Date();
+            const lastDate = new Date(lastCompletionDate);
+
+            const diffTime = Math.abs(today - lastDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 1) { // More than one day has passed since last completion
+                momentumStreak = 0;
+                momentumMessageEl.textContent = "Oh no! Your chain broke. Complete a task to start a new one!";
+                showMessage("Momentum chain broken. Start a new one!", "warning");
+                saveMomentum();
+                updateMomentumDisplay();
+            }
+        }
+
+        function updateMomentumDisplay() {
+            momentumStreakEl.textContent = momentumStreak;
+            if (momentumStreak === 0) {
+                momentumMessageEl.textContent = "Complete a task today to start your chain!";
+            } else {
+                momentumMessageEl.textContent = `Keep it up! ${momentumStreak} day${momentumStreak > 1 ? 's' : ''} strong.`;
+            }
+        }
+
+        // --- Focus Mode ---
+        function startFocusMode(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task || task.completed) {
+                showMessage("Cannot focus on a completed or non-existent task.", "error");
+                return;
+            }
+            currentFocusTask = task;
+            focusTaskNameEl.textContent = `Focusing on: ${task.text}`;
+            focusModeSection.classList.remove('hidden');
+            document.body.classList.add('focus-active'); // Hide other elements
+
+            focusTimeRemaining = 25 * 60; // Reset timer
+            updateFocusTimerDisplay();
+            focusTimerInterval = setInterval(tickFocusTimer, 1000);
+
+            // Scroll to focus mode section if it's not fully visible
+            focusModeSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function tickFocusTimer() {
+            focusTimeRemaining--;
+            updateFocusTimerDisplay();
+            if (focusTimeRemaining <= 0) {
+                clearInterval(focusTimerInterval);
+                focusTimerInterval = null;
+                showMessage("Focus session complete! Task automatically marked as done.", "success");
+                completeTaskFromFocus(true); // true for auto-complete
+            }
+        }
+
+        function updateFocusTimerDisplay() {
+            const minutes = Math.floor(focusTimeRemaining / 60);
+            const seconds = focusTimeRemaining % 60;
+            focusTimerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function completeTaskFromFocus(autoCompleted = false) {
+            if (!currentFocusTask) return;
+
+            toggleComplete(currentFocusTask.id); // This will also call handleTaskCompletion
+            if (!autoCompleted) {
+                 showMessage(`Task "${currentFocusTask.text}" marked as complete!`, "success");
+            }
+            exitFocusMode(false); // false: don't show exit message
+        }
+
+        function exitFocusMode(showMsg = true) {
+            clearInterval(focusTimerInterval);
+            focusTimerInterval = null;
+            currentFocusTask = null;
+            focusModeSection.classList.add('hidden');
+            document.body.classList.remove('focus-active');
+            if (showMsg) showMessage("Exited focus mode.", "info");
+            renderTasks(); // Re-render to update focus buttons if needed
+        }
+
+        // --- Local Storage ---
+        function saveTasks() {
+            localStorage.setItem('momentumTasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            const storedTasks = localStorage.getItem('momentumTasks');
+            if (storedTasks) {
+                tasks = JSON.parse(storedTasks);
+            }
+        }
+
+        function saveMomentum() {
+            localStorage.setItem('momentumStreak', momentumStreak.toString());
+            localStorage.setItem('lastCompletionDate', lastCompletionDate);
+        }
+
+        function loadMomentum() {
+            const storedStreak = localStorage.getItem('momentumStreak');
+            if (storedStreak) {
+                momentumStreak = parseInt(storedStreak, 10);
+            }
+            const storedDate = localStorage.getItem('lastCompletionDate');
+            if (storedDate) {
+                lastCompletionDate = storedDate;
+            }
+        }
+
+        // --- Utility: Message Box ---
+        let messageTimeout;
+        function showMessage(message, type = "info") { // types: success, error, info, warning
+            messageBox.textContent = message;
+            messageBox.className = 'message-box'; // Reset classes
+
+            switch(type) {
+                case "success":
+                    messageBox.classList.add('bg-green-500');
+                    break;
+                case "error":
+                    messageBox.classList.add('bg-red-500');
+                    break;
+                case "warning":
+                    messageBox.classList.add('bg-yellow-500', 'text-yellow-900');
+                    break;
+                case "info":
+                default:
+                    messageBox.classList.add('bg-sky-500');
+                    break;
+            }
+
+            messageBox.classList.add('show');
+
+            clearTimeout(messageTimeout);
+            messageTimeout = setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- Event Listeners ---
+        addTaskBtn.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                addTask();
+            }
+        });
+        completeFocusTaskBtn.addEventListener('click', () => completeTaskFromFocus(false));
+        exitFocusModeBtn.addEventListener('click', () => exitFocusMode(true));
+
+        // --- Start the app ---
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
