@@ -20,7 +20,7 @@ Please contact at:
 2. Java: 
     This folder contains java programs that I am learning
 3. HTML:
-   This contains htmlcode
+   This contains html code for a to-do list
 ---
 
 # Projects In this Repository:
