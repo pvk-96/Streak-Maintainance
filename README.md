@@ -1,4 +1,4 @@
-# This is a Simple Repository made just to maintain my GitHub Streak.
+# This is a Simple Repository made just to post my miscellaneous projects on my GitHub profile
 I upload simple programs in this, All the programs are useful.
 ---
 Feel free to contact me and suggesting me any ideas.
